@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 const mustacheExpress = require('mustache-express');
 const session = require('express-session');
 const app = express();
-const url = 'mongodb://EthanJarrell:EJ3102nl1@ds141796.mlab.com:41796/trumpsays';
+const url = process.env.MONGOLAB_URI;
 //=========================//
 
 //====SET APP ENGINE===//
