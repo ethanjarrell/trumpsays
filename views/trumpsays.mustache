@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Say WHAT?!?!</title>
+  <link rel="stylesheet" href="/trump.css">
+  <link href="https://fonts.googleapis.com/css?family=Volkhov" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Gravitas+One|Teko:700" rel="stylesheet">
+  <script>
+    $(document).ready(function() {
+      console.log("talking");
+
+      let input = document.getElementById('input');
+      let button = document.getElementById('button');
+      button.onclick = searchAPI;
+
+      function searchAPI() {
+
+        let inputValue = input.value;
+
+        fetch('https://api.mlab.com/api/1/databases/trumpsays/collections/trumpspeeches?&l=41000&apiKey=_ehmfqV-bs1PDWki2WNFVMsGmXGQuk77').then(function(response) {
+          if (response.status != 200) {
+            window.alert("Sorry, nothing matches those search terms.  Try another search, or use the panel on the left.");
+            return;
+          }
+
+          response.json().then(function(data) {
+
+            let api = data;
+
+            let titles = [];
+            let venues = [];
+            let dates = [];
+            let matchedFrequentWords = [];
+            let totalBadWords = [];
+            let totalGoodWords = [];
+            let totalAngerWords = [];
+            let totalPeaceWords = [];
+            let count = 0;
+            for (var i = 0; i < api.length; i++) {
+              let inputValue = input.value;
+              let frequentWords = [ "women's rights", "women", "deport", "border", "security", "immigration", "extremism", "terrorism", "tuition", "healthcare", "tax reform", "taxes", "citizenship", "abortion", "religion", "lgbt", "gay rights", "transgender", "military", "marriage", "gun control", "surveillance", "net neutrality", "drugs", "social security", "obamacare", "medicaid", "israel", "military spending", "north korea", "isis", "equal rights", "minimum wage", "welfare", "student loans", "education", "climate change", "transportation"];
+              let goodWords = ["success", "succeed", "win", "hope", "positive", "optimistic"];
+              let badWords = ["failure", "fail", "lose", "fear", "negative", "pessimistic"];
+              let angerWords = ["annoy", "fury", "hate", "outrage", "rage", "angry", "anger"];
+              let peaceWords = ["calm", "cheer", "comfort", "delight", "kindness", "peace"];
+
+              if(api[i].text.indexOf(inputValue) > -1) {
+                    let stringX = api[i].text.split(" ");
+              for (var j = 0; j < badWords.length; j++) {
+                for (var k = 0; k < stringX.length; k++) {
+                  if (badWords[j] == stringX[k]) {
+                    totalBadWords.push([
+                      api[i].speechtitle,
+                      api[i].speechdate,
+                      api[i].speechlocation,
+                    ])
+                            }
+                          }
+                        }
+                      }
+
+              if(api[i].text.indexOf(inputValue) > -1) {
+                    let stringX = api[i].text.split(" ");
+              for (var j = 0; j < goodWords.length; j++) {
+                for (var k = 0; k < stringX.length; k++) {
+                  if (goodWords[j] == stringX[k]) {
+                    totalGoodWords.push([
+                      api[i].speechtitle,
+                      api[i].speechdate,
+                      api[i].speechlocation,
+                    ])
+                            }
+                          }
+                        }
+                      }
+
+                      if(api[i].text.indexOf(inputValue) > -1) {
+                            let stringX = api[i].text.split(" ");
+                      for (var j = 0; j < angerWords.length; j++) {
+                        for (var k = 0; k < stringX.length; k++) {
+                          if (angerWords[j] == stringX[k]) {
+                            totalAngerWords.push([
+                              api[i].speechtitle,
+                              api[i].speechdate,
+                              api[i].speechlocation,
+                            ])
+                                    }
+                                  }
+                                }
+                              }
+
+                              if(api[i].text.indexOf(inputValue) > -1) {
+                                    let stringX = api[i].text.split(" ");
+                              for (var j = 0; j < peaceWords.length; j++) {
+                                for (var k = 0; k < stringX.length; k++) {
+                                  if (peaceWords[j] == stringX[k]) {
+                                    totalPeaceWords.push([
+                                      api[i].speechtitle,
+                                      api[i].speechdate,
+                                      api[i].speechlocation,
+                                    ])
+                                            }
+                                          }
+                                        }
+                                      }
+
+              if(api[i].text.indexOf(inputValue) > -1) {
+                let stringX = api[i].text.split(" ");
+                for (var j = 0; j < frequentWords.length; j++) {
+                  for (var k = 0; k < stringX.length; k++) {
+                    if (frequentWords[j] == stringX[k]) {
+                      matchedFrequentWords.push([
+                        frequentWords[j]
+                    ])
+                   }
+                 }
+               }
+             }
+
+             if(api[i].text.indexOf(inputValue) > -1) {
+                     dates.push(
+                       api[i].speechdate,
+                   );
+                   venues.push(
+                     api[i].speechlocation
+                 );
+                 titles.push(
+                   api[i].speechtitle
+               );
+               count++;
+                  }
+
+
+            }
+
+            Array.prototype.byCount= function(){
+            var itm, a= [], L= this.length, o= {};
+            for(var i= 0; i<L; i++){
+              itm= this[i];
+              if(!itm) continue;
+              if(o[itm]== undefined) o[itm]= 1;
+              else ++o[itm];
+            }
+            for(var p in o) a[a.length]= {item: p, frequency: o[p]};
+            return a.sort(function(a, b){
+              return o[b.item]-o[a.item];
+            });
+          }
+
+
+
+    let frequentWordCount = matchedFrequentWords.byCount();
+    let badWordCount = totalBadWords.byCount();
+    let goodWordCount = totalGoodWords.byCount();
+    let angerWordCount = totalAngerWords.byCount();
+    let peaceWordCount = totalPeaceWords.byCount();
+
+
+    console.log(matchedFrequentWords);
+    console.log(totalBadWords);
+    console.log(totalGoodWords);
+
+    console.log(frequentWordCount);
+    console.log(badWordCount);
+    console.log(goodWordCount);
+
+    function getSum(total, num) {
+    return total + num;
+    }
+
+    let frequentWordTotal = [];
+    for (var i = 0; i < frequentWordCount.length; i++) {
+      frequentWordTotal.push(frequentWordCount[i].frequency);
+    }
+
+    let frequentSum = frequentWordTotal.reduce(getSum);
+
+    let word1Percent = (Math.ceil((frequentWordCount[0].frequency / frequentSum) * 100));
+    let word2Percent = (Math.ceil((frequentWordCount[1].frequency / frequentSum) * 100));
+    let word3Percent = (Math.ceil((frequentWordCount[2].frequency / frequentSum) * 100));
+
+    console.log(word1Percent);
+    console.log(word2Percent);
+
+    let dateFreq = dates.byCount();
+    let venueFreq = venues.byCount();
+    let titleFreq = titles.byCount();
+
+    console.log(titleFreq);
+    console.log(dateFreq);
+    console.log(venueFreq);
+
+    let dateNumbers = [];
+    let venueNumbers = [];
+    let titleNumbers = [];
+    for (var i = 0; i < dateFreq.length; i++) {
+      dateNumbers.push(dateFreq[i].frequency);
+    }
+    for (var i = 0; i < venueFreq.length; i++) {
+      venueNumbers.push(venueFreq[i].frequency);
+    }
+    for (var i = 0; i < titleFreq.length; i++) {
+      titleNumbers.push(titleFreq[i].frequency);
+    }
+
+    let dateSum = dateNumbers.reduce(getSum);
+
+    let dateMost = {
+      "date" : dateFreq[0].item,
+      "occur" : dateFreq[0].frequency,
+      "percent" : (Math.ceil((dateFreq[0].frequency / dateSum) * 100)),
+    }
+
+    let leastDate = dateFreq.length - 1;
+    console.log(leastDate);
+
+    let dateLeast = {
+      "date" : dateFreq[leastDate].item,
+      "occur" : dateFreq[leastDate].frequency,
+      "percent" : (Math.ceil((dateFreq[leastDate].frequency / dateSum) * 100)),
+    }
+
+    let venueSum = venueNumbers.reduce(getSum);
+
+    let venueMost = {
+      "date" : venueFreq[0].item,
+      "occur" : venueFreq[0].frequency,
+      "percent" : (Math.ceil((venueFreq[0].frequency / venueSum) * 100)),
+    }
+
+    let leastVenue = venueFreq.length - 1;
+    console.log(leastVenue);
+
+    let venueLeast = {
+      "date" : venueFreq[leastVenue].item,
+      "occur" : venueFreq[leastVenue].frequency,
+      "percent" : (Math.ceil((venueFreq[leastVenue].frequency / venueSum) * 100)),
+    }
+
+
+
+    let titleSum = titleNumbers.reduce(getSum);
+
+    let titleMost = {
+      "date" : titleFreq[0].item,
+      "occur" : titleFreq[0].frequency,
+      "percent" : (Math.ceil((titleFreq[0].frequency / titleSum) * 100)),
+    }
+
+    let leastTitle = titleFreq.length - 1;
+    console.log(leastTitle);
+
+    let titleLeast = {
+      "date" : titleFreq[leastTitle].item,
+      "occur" : titleFreq[leastTitle].frequency,
+      "percent" : (Math.ceil((titleFreq[leastTitle].frequency / titleSum) * 100)),
+    }
+
+    console.log(titleLeast);
+    console.log(titleMost);
+    console.log(venueMost);
+    console.log(venueLeast);
+    console.log(dateMost);
+    console.log(dateLeast);
+
+    let goodNumbers = [];
+    for (var i = 0; i < goodWordCount.length; i++) {
+      goodNumbers.push(goodWordCount[i].frequency);
+    }
+
+    let badNumbers = [];
+    for (var i = 0; i < badWordCount.length; i++) {
+      badNumbers.push(badWordCount[i].frequency);
+    }
+
+    let angerNumbers = [];
+    for (var i = 0; i < angerWordCount.length; i++) {
+      angerNumbers.push(angerWordCount[i].frequency);
+    }
+
+    let peaceNumbers = [];
+    for (var i = 0; i < peaceWordCount.length; i++) {
+      peaceNumbers.push(peaceWordCount[i].frequency);
+    }
+
+
+    let goodSum = goodNumbers.reduce(getSum);
+    let badSum = badNumbers.reduce(getSum);
+    let angerSum = angerNumbers.reduce(getSum);
+    let peaceSum = peaceNumbers.reduce(getSum);
+    let totalSum = goodSum + badSum + angerSum + peaceSum;
+
+    console.log(frequentSum);
+
+    let goodPercent = (Math.ceil((goodSum / totalSum) * 100));
+    let badPercent = (Math.ceil((badSum / totalSum) * 100));
+    let angerPercent = (Math.ceil((angerSum / totalSum) * 100));
+    let peacePercent = (Math.ceil((peaceSum / totalSum) * 100));
+    let inputValue = input.value;
+
+    let searchSummary = `
+    <div class="container">
+    <div>
+    <h3>Trump talked about ${inputValue} a total of ${count} times in all of the speeches we surveyed.</h3>
+    </div>
+
+    <div>
+    <h3>Trump talked about ${inputValue} the most in his address: ${titleMost.date}</h3>
+    <h3>He spoke about ${inputValue} ${titleMost.occur} times during this speech.</h3>
+    <h3>This accounts for ${titleMost.percent}% of the times he mentions ${inputValue} in any of his speeches.</h3>
+    </div>
+
+    <div>
+    <h3>Trump talked about ${inputValue} the most in  ${dateMost.date}</h3>
+    <h3>He spoke about ${inputValue} ${dateMost.occur} times on this date.</h3>
+    <h3>This accounts for ${dateMost.percent}% of the times he mentions ${inputValue} overall.</h3>
+    </div>
+
+    <div>
+    <h3>Trump talked about ${inputValue} the most while speaking at  ${venueMost.date}</h3>
+    <h3>He spoke about ${inputValue} ${venueMost.occur} times at this location.</h3>
+    <h3>This accounts for ${venueMost.percent}% of the times he mentions ${inputValue} at any location.</h3>
+    </div>
+
+    <div>
+    <h3>Trump talked about ${inputValue} the least in his address: ${titleLeast.date}</h3>
+    <h3>He spoke about ${inputValue} ${titleLeast.occur} times during this speech.</h3>
+    <h3>This accounts for ${titleLeast.percent}% of the times he mentions ${inputValue} in any of his speeches.</h3>
+    </div>
+
+    <div>
+    <h3>Trump talked about ${inputValue} the least in  ${dateLeast.date}</h3>
+    <h3>He spoke about ${inputValue} ${dateLeast.occur} times on this date.</h3>
+    <h3>This accounts for ${dateLeast.percent}% of the times he mentions ${inputValue} overall.</h3>
+    </div>
+
+    <div>
+    <h3>Trump talked about ${inputValue} the least at  ${venueLeast.date}</h3>
+    <h3>He spoke about ${inputValue} ${venueLeast.occur} times at this Location.</h3>
+    <h3>This accounts for ${venueLeast.percent}% of the times he mentions ${inputValue} at any location.</h3>
+    </div>
+    </div>
+    `
+
+    let wordGraph = `
+
+
+    <div class="container">
+
+    <h3>When speaking on ${inputValue}, here are the top three sub-topics Trump most often references:</h3>
+
+
+    <span class="dataSubLabel" style="color:#282B60;font-family: 'Teko', sans-serif;font-size:40px;">${frequentWordCount[0].item}</span><span class="dataSubLabel" style="color:#282B60;font-family:sans-serif;font-size:20px;"> - appears  ${frequentWordCount[0].frequency} times.</span>
+    <div style="padding-left:50px;background-image:url('darkblue.jpg');background-size:cover;color:white;display:flex;flex-direction: row;justify-content:flex-end;align-items:center;height:45px;border:solid #900B13 2px;font-family: 'Teko', sans-serif;-webkit-text-stroke-width:1px;-webkit-text-stroke-color:#282B60;;font-size:40px;width:${word1Percent}%;">${word1Percent}% </div>
+
+    <span class="dataSubLabel" style="color:#0B2AD2;font-family: 'Teko', sans-serif;font-size:40px;">${frequentWordCount[1].item}</span><span class="dataSubLabel" style="color:#0B2AD2;font-family:sans-serif;font-size:20px;"> - appears  ${frequentWordCount[1].frequency} times.</span>
+    <div style="padding-left:50px;background-image:url('blueflag.jpg');background-size:cover;color:white;display:flex;flex-direction: row;justify-content:flex-end;align-items:center;height:45px;border:solid #900B13 2px;font-family: 'Teko', sans-serif;-webkit-text-stroke-width:1px;-webkit-text-stroke-color:#282B60;;font-size:40px;width:${word2Percent}%;">${word2Percent}% </div>
+
+    <span class="dataSubLabel" style="color:#1996D1;font-family: 'Teko', sans-serif;font-size:40px;">${frequentWordCount[2].item}</span><span class="dataSubLabel" style="color:#1996D1;font-family:sans-serif;font-size:20px;"> - appears  ${frequentWordCount[2].frequency} times.</span>
+    <div style="padding-left:50px;background-image:url('lightblue.jpg');background-size:cover;color:white;display:flex;flex-direction: row;justify-content:flex-end;align-items:center;height:45px;border:solid #900B13 2px;font-family: 'Teko', sans-serif;-webkit-text-stroke-width:1px;-webkit-text-stroke-color:#282B60;;font-size:40px;width:${word3Percent}%;">${word3Percent}% </div>
+    </div>
+    `
+
+    let goodBarGraph = `
+    <div class="container">
+
+    <h3>When speaking on ${inputValue}, The overall tone of the speech appears to be:</h3>
+
+    <span class="dataSubLabel" style="color:#338A16;font-family: 'Teko', sans-serif;font-size:40px;">Optimism: </span>
+    <div style="padding-left:50px;background-image:url('greenflag.jpg');background-size:cover;color:white;display:flex;flex-direction: row;justify-content:flex-end;align-items:center;height:45px;border:solid #900B13 2px;font-family: 'Teko', sans-serif;-webkit-text-stroke-width:1px;-webkit-text-stroke-color:#282B60;;font-size:40px;width:${goodPercent}%;">${goodPercent}% </div>
+    <span class="dataSubLabel" style="color:#A80D0F;font-family: 'Teko', sans-serif;font-size:40px;">Pessimism: </span>
+    <div style="padding-left:50px;background-image:url('redflag.jpg');background-size:cover;color:white;display:flex;flex-direction: row;justify-content:flex-end;align-items:center;height:45px;border:solid #900B13 2px;font-family: 'Teko', sans-serif;-webkit-text-stroke-width:1px;-webkit-text-stroke-color:#282B60;;font-size:40px;width:${badPercent}%;">${badPercent}% </div>
+
+    <span class="dataSubLabel" style="color:#A80D0F;font-family: 'Teko', sans-serif;font-size:40px;">Anger: </span>
+    <div style="padding-left:50px;background-image:url('orangeflag.jpg');background-size:cover;color:white;display:flex;flex-direction: row;justify-content:flex-end;align-items:center;height:45px;border:solid #900B13 2px;font-family: 'Teko', sans-serif;-webkit-text-stroke-width:1px;-webkit-text-stroke-color:#282B60;;font-size:40px;width:${angerPercent}%;">${angerPercent}% </div>
+
+    <span class="dataSubLabel" style="color:#A80D0F;font-family: 'Teko', sans-serif;font-size:40px;">Love & Peace: </span>
+    <div style="padding-left:50px;background-image:url('pinkflag.jpg');background-size:cover;color:white;display:flex;flex-direction: row;justify-content:flex-end;align-items:center;height:45px;border:solid #900B13 2px;font-family: 'Teko', sans-serif;-webkit-text-stroke-width:1px;-webkit-text-stroke-color:#282B60;;font-size:40px;width:${peacePercent}%;">${peacePercent}% </div>
+    </div>
+    `
+    document.getElementById('results').innerHTML = wordGraph;
+    document.getElementById('goodresults').innerHTML = goodBarGraph;
+    document.getElementById('badresults').innerHTML = searchSummary;
+
+
+          })
+        })
+      }
+    })
+
+  </script>
+</head>
+
+<body>
+
+<div>
+<label>search for a word or phrase</label>
+</div>
+<div>
+<input id="input" />
+</div>
+<div>
+<buton id="button">search</button>
+</div>
+
+<div class="flexContainer">
+
+<div class="red" id="badresults"></div>
+
+<div id="results"></div>
+
+<div class="red" id="goodresults"></div>
+
+
+
+</div>
+
+</body>
+
+</html>

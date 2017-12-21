@@ -1,0 +1,43 @@
+#button {
+  cursor: pointer;
+  border: black solid 1.5px;
+  padding: 5px;
+  background-color: red;
+  color: white;
+  font-weight: bold;
+}
+
+div {
+  margin: 15px;
+}
+
+#button:hover {
+  transform: scale(1.6);
+  border: black solid 3px;
+  filter: brightness(150%);
+}
+
+.container {
+  background-color: #f7f7f7;
+  border: solid black 2px;
+  padding: 20px;
+  margin: 8px;
+}
+
+.flexContainer {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100vw;
+}
+
+#results {
+  width: 30%;
+}
+#goodresults {
+  width: 30%;
+}
+#badresults {
+  width: 20%;
+}
